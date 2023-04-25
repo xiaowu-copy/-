@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.mapper.TeacherMapper">
+
+
+    <select id="Login" resultType="int">
+        select IFNULL(count(LoginName), 0) from teacher where LoginName = #{LoginName} and Password = #{Password} and IsAction = #{Radio}
+    </select>
+
+	<select id="GetTeacherId" resultType="int">
+		select IFNULL(id, 0) from teacher where LoginName = #{LoginName} and Password = #{Password} and IsAction = #{Radio}
+	</select>
+
+	<select id="GetInfor" resultType="Teacher">
+		select * from teacher where id = #{id}
+	</select>
+
+	<select id="GetClass" resultType="String">
+		select ClassName from class where Classid in(
+			select Class_id  from teacher,teacher_class
+			WHERE teacher.Id = #{id} and teacher.Id = teacher_class.Teacher_id)
+	</select>
+
+	<select id="TeacherRanking" resultType="Teacher">
+		SELECT * from teacher ORDER BY Active DESC
+	</select>
+
+	<select id="GetTeacherAll" resultType="Teacher">
+		select  teacher.Id,LoginName,CreateTime,Active,phone,orgnazation,GROUP_CONCAT(ClassName)  as Teach_Class from teacher,class,teacher_class
+		where  teacher_class.Class_id = class.Classid and teacher.Id = teacher_class.Teacher_id and teacher.isAction = 1  GROUP BY LoginName
+	</select>
+
+	<insert id="Register" parameterType="Teacher" useGeneratedKeys="true"  keyProperty="Id">
+		insert into teacher(LoginName,Password,IsAction,CreateTime,Active,Avatar,phone,orgnazation)
+		values ( #{LoginName}, #{Password},1, #{CreateTime},0,#{Avatar},#{phone},#{orgnazation} )
+	</insert>
+	<select id="checkUsernameExists" resultType="boolean">
+		SELECT COALESCE(( SELECT true from teacher where LoginName = #{username}),false)
+	</select>
+
+
+
+
+
+
+
+</mapper>

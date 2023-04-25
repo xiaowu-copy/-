@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.mapper.PictureMapper">
+
+
+    <select id="selectAll" resultType="Picture">
+        select picture.*,teacher.LoginName,teacher.Avatar
+        FROM picture,techer_picture,teacher
+        WHERE picture.id= techer_picture.picture_id and techer_picture.author_id = teacher.Id and picture.IsAdmited = 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true"  keyProperty="id">
+        insert into picture(address,name,IsAdmited) values (#{address}, #{name},0)
+    </insert>
+
+    <insert id="InsertTeacher_P">
+        insert into teacher_picture(author_id,picture_id,up_time) values (#{author_id}, #{picture_id},#{up_time})
+    </insert>
+
+
+
+
+
+</mapper>

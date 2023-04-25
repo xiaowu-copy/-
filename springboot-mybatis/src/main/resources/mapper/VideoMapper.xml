@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.mapper.VideoMapper">
+
+
+    <select id="selectVidio" resultType="Video">
+        select * from Video where IsAdmit = 1
+    </select>
+
+    <select id="getOne" resultType="Video">
+        select * from Video,teacher where ViedioId = #{id} and video.AuthorId = teacher.Id
+    </select>
+
+<!--    浏览次数的增加-->
+    <update id="View">
+        update video set NumberofViews = NumberofViews+1 where ViedioId = #{id}
+    </update>
+<!--    得到思政资源排行的方法-->
+    <select id="Ranking" resultType="Video">
+        select * from Video,teacher WHERE video.AuthorId = teacher.id ORDER by NumberofReferences DESC
+    </select>
+
+<!--    用户上传思政资源-->
+    <insert id="Upload" parameterType="Video">
+        insert into video(Title,Img,Type,Content,CreateTime,IsAdmited,source,label,NumberofViews,NumberofReferences,AuthorId)
+        values ( #{Title}, #{Img},1, #{Content}, #{CreateTime},0,"思想研究工作室",#{label},0,0,#{AuthorId} )
+    </insert>
+<!--    管理员方法 查找-->
+
+    <select id="Cheak" resultType="Video">
+        select * from Video,teacher WHERE video.AuthorId = teacher.id and IsAdmit = 0
+    </select>
+
+    <update id="Approved">
+        update video
+        set IsAdmit =1
+        where ViedioId=#{id}
+
+    </update>
+
+    <select id="Search" resultType="Video">
+        select * from Video,teacher WHERE video.AuthorId = teacher.id and IsAdmit = 1 and ViedioTitile like "%"#{key}"%"
+    </select>
+
+
+
+
+    <sql id="selectConfigVo">
+        select config_id, config_name, config_key, config_value, config_type, create_by, create_time, update_by, update_time, remark
+		from sys_config
+    </sql>
+
+
+    <!-- 查询条件 -->
+
+
+</mapper>

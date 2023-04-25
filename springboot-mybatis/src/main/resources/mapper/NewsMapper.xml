@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.mapper.NewsMapper">
+
+
+    <select id="selectAll" resultType="News">
+        select * from news
+    </select>
+
+	<select id="getItemById" resultType="News">
+		select * from news where Id = ${id}
+	</select>
+
+    <select id="getAuthor_Name" resultType="String">
+        select  DISTINCT teacher.LoginName from news,teacher where news.AuthorId = ${id} and news.AuthorId = teacher.Id
+    </select>
+
+
+    <update id="View">
+        update news set NumberofViews = NumberofViews+1 where Id = #{id}
+    </update>
+
+    <insert id="Upload" parameterType="News">
+        insert into news(Title,Img,Type,Content,CreateTime,IsAdmited,source,label,NumberofViews,NumberofReferences,AuthorId)
+        values ( #{Title}, #{Img},1, #{Content}, #{CreateTime},0,"思想研究工作室",#{label},0,0,#{AuthorId} )
+    </insert>
+<!--    //管理员方法 审核新闻-->
+    <select id="Cheack" resultType="News">
+        select  news.*,teacher.LoginName as Author_Name from news,teacher where news.AuthorId = teacher.Id and news.IsAdmited = 0
+    </select>
+
+    <update id="Approved">
+        update news
+        set IsAdmited =1
+        where Id=#{id}
+
+    </update>
+
+    <delete id="Failed">
+        delete
+        from news
+        where Id=#{id};
+    </delete>
+
+
+
+
+</mapper>

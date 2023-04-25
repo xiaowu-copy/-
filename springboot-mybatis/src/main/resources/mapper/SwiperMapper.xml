@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.mapper.SwiperMapper">
+
+    <select id="getCasesAll" resultType="Swiper">
+        select * from Swiper
+    </select>
+
+    <select id="getSwiperOne" resultType="Swiper">
+        select swiper.*,teacher.LoginName,teacher.Avatar,swiper.intro
+        from swiper,teacher where swiper.id = #{id} and swiper.id = teacher.Id
+    </select>
+
+
+    <update id="AddView">
+        update swiper set NumberofViews = NumberofViews+1 where id = #{id}
+    </update>
+
+
+
+</mapper>
